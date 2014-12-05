@@ -61,7 +61,6 @@ unless node['cloud_monitoring']['agent']['token'].nil?
     group "root"
     mode 0600
     variables(
-      :monitoring_id => node['cloud_monitoring']['agent']['id'],
       :monitoring_token => node['cloud_monitoring']['agent']['token']
     )
   end
