@@ -50,8 +50,6 @@ package "rackspace-monitoring-agent" do
     version node['cloud_monitoring']['agent']['version']
     action :install
   end
-
-  notifies :restart, "service[rackspace-monitoring-agent]"
 end
 
 unless node['cloud_monitoring']['agent']['token'].nil?
@@ -80,13 +78,7 @@ node['cloud_monitoring']['plugins'].each_pair do |source_cookbook, path|
   end
 end
 
+# We want to control this service via supervise.
 service "rackspace-monitoring-agent" do
-  # TODO: RHEL, CentOS, ... support
-  supports value_for_platform(
-    "ubuntu" => { "default" => [ :start, :stop, :restart, :status ] },
-    "default" => { "default" => [ :start, :stop, :restart, :status ] }
-  )
-
-  action [ :enable, :start ]
-  subscribes :restart, resources(:template => '/etc/rackspace-monitoring-agent.cfg'), :delayed
+  action [ :disable, :stop ]
 end
