@@ -77,8 +77,3 @@ node['cloud_monitoring']['plugins'].each_pair do |source_cookbook, path|
     purge false
   end
 end
-
-# We want to control this service via supervise.
-service "rackspace-monitoring-agent" do
-  action [ :disable, :stop ]
-end
