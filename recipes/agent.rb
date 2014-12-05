@@ -61,7 +61,6 @@ unless node['cloud_monitoring']['agent']['token'].nil?
     group "root"
     mode 0600
     variables(
-      :monitoring_id => node['cloud_monitoring']['agent']['id'],
       :monitoring_token => node['cloud_monitoring']['agent']['token']
     )
   end
@@ -85,15 +84,8 @@ service "rackspace-monitoring-agent" do
   # TODO: RHEL, CentOS, ... support
   supports value_for_platform(
     "ubuntu" => { "default" => [ :start, :stop, :restart, :status ] },
-    "default" => { "default" => [ :start, :stop ] }
+    "default" => { "default" => [ :start, :stop, :restart, :status ] }
   )
-
-  case node[:platform]
-    when "ubuntu"
-    if node[:platform_version].to_f >= 9.10
-      provider Chef::Provider::Service::Upstart
-    end
-  end
 
   action [ :enable, :start ]
   subscribes :restart, resources(:template => '/etc/rackspace-monitoring-agent.cfg'), :delayed
